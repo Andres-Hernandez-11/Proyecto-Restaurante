@@ -1,0 +1,221 @@
+/* src/App.css */
+
+/* 1. Variables Globales para un diseño consistente */
+:root {
+  --primary-start: #66eaa8;
+  --primary-end: #764ba2;
+  --success-start: #28a745;
+  --success-end: #20c997;
+  --light-text: #ffffff;
+  --dark-text: #333;
+  --bg-light: #ffffff;
+  --bg-panel: rgba(255, 255, 255, 0.95);
+  --border-light: #f0f0f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+}
+
+/* 2. Estilos base y centrado principal */
+body {
+  font-family: var(--main-font);
+  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+  color: var(--dark-text);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  /* Centrado perfecto de todo el contenido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.App {
+  width: 100%;
+  max-width: 1200px;
+  text-align: center; /* Centra el texto de los elementos hijos por defecto */
+}
+
+/* 3. Estilos del formulario de selección */
+.form-group {
+  margin-bottom: 40px;
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--light-text);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+
+select {
+  max-width: 400px;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: var(--border-radius-md);
+  border: 2px solid transparent;
+  background-color: var(--bg-light);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--primary-start);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
+}
+
+/* 4. Contenedor principal de las tarjetas */
+.container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start; /* Alinea las tarjetas en la parte superior */
+}
+
+/* 5. Estilos de las tarjetas (Menú y Pedido) */
+.menu-disponible, .pedido-actual {
+  flex: 1;
+  min-width: 320px;
+  max-width: 500px;
+  background: var(--bg-panel);
+  padding: 30px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left; /* Alinea el texto de la tarjeta a la izquierda */
+}
+
+.menu-disponible:hover, .pedido-actual:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.menu-disponible h2, .pedido-actual h2 {
+  margin-top: 0;
+  color: var(--primary-start);
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+}
+
+/* 6. Estilos de los ítems del menú */
+.plato-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color 0.2s ease;
+}
+
+.plato-item:hover {
+  background-color: #f8f9ff;
+  border-radius: var(--border-radius-md);
+}
+
+.plato-item:last-child {
+  border-bottom: none;
+}
+
+.plato-item span {
+  font-size: 1rem;
+  color: var(--dark-text);
+}
+
+.plato-item button {
+  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+  color: var(--light-text);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* Para centrar el '+' perfectamente */
+}
+
+.plato-item button:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.plato-item button:active {
+  transform: scale(1.05) ;
+}
+
+/* 7. Estilos de la lista del pedido */
+.pedido-actual ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 25px;
+}
+
+.pedido-actual li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 15px;
+  background-color: #f8f9ff;
+  margin-bottom: 8px;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+}
+
+.pedido-actual button {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--success-start) 0%, var(--success-end) 100%);
+  color: var(--light-text);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pedido-actual button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+.pedido-actual button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pedido-actual button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 8. Estilos responsivos */
+@media (max-width: 768px) {
+  body {
+    align-items: flex-start; /* Permite scroll en pantallas pequeñas */
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: center; /* Centra las tarjetas en el modo columna */
+  }
+  
+  .menu-disponible, .pedido-actual {
+    width: 100%;
+    max-width: 90vw; /* Asegura que no toque los bordes */
+  }
+}
