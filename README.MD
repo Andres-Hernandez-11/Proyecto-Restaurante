@@ -35,20 +35,23 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 ### 3. Configuración del Entorno
 1.  Este proyecto usa un archivo `.env` para las variables de entorno. Crea una copia del archivo de ejemplo:
     ```bash
-    cp .env.example .env
+    # Connect to Supabase via connection pooling
+    DATABASE_URL="postgresql://postgres.egozlcxznvfehdejjkab:[YOUR-PASSWORD]@aws-1-us-east-2.pooler.supabase.com:5432/postgres?pgbouncer=true"
     ```
     *(Si no tienes .env.example, créalo y añade `DATABASE_URL=""`)*
 
-2.  Abre el archivo `.env` y añade tu URL de conexión de la base de datos:
-    ```
-    DATABASE_URL="postgresql://postgres:TU_CONTRASEÑA@db.xyz.supabase.co..."
-    ```
 
 ### 4. Base de Datos
 Ejecuta la migración de Prisma para crear todas las tablas en tu base de datos:
 ```bash
-npx prisma migrate dev
+npx prisma migrate dev --name init
  ```
 
 ### 5. ejecutar el servidor
 1. Se ejecuta el servidor con el comando node server.js -> el servidor estara corriendo en el localhost en el puerto 4000
+
+
+### 6. Instalar cors
+```bash
+npm install cors
+ ```
