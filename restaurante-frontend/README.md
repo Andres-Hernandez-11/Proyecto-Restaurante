@@ -25,7 +25,7 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 ### 2. Instalación
 1.  Clona el repositorio:
     ```bash
-    git clone [https://github.com/TU_USUARIO/restaurante-frontend.git](https://github.com/edwinzubieta/restaurantsoft-front.git)
+    git clone https://github.com/edwinzubieta/restaurantsoft-front.git
     ```
 2.  Entra en la carpeta del proyecto:
     ```bash
@@ -34,19 +34,17 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 3.  Instala las dependencias:
     ```bash
     npm install
-    ```
 
-### 3. Configuración del Entorno (Mejora Opcional pero Correcta)
-
-Para evitar tener la URL de la API "quemada" en el código, podemos usar un archivo `.env`.
-
-1.  Crea un archivo `.env` en la raíz del proyecto.
-2.  Añade la siguiente línea (Vite requiere el prefijo `VITE_`):
+### 4. Conexion a la API de cada componente
     ```
-    VITE_API_URL=http://localhost:4000/api
-    ```
-3.  En el código  `TomarPedido.jsx`, se usara la URL:
+1.  En el código  `TomarPedido.jsx`, se usara la URL:
      `const API_URL = import.meta.env.VITE_API_URL;`
+    ```
+### 5. Instalar axios
+Inicia el servidor de desarrollo de Vite:
+```bash
+npm install axios
+```
 
 ### 4. Ejecutar la Aplicación
 Inicia el servidor de desarrollo de Vite:
