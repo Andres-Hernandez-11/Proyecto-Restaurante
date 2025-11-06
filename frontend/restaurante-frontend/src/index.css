@@ -1,0 +1,38 @@
+/* src/index.css */
+
+/* 1. Variables Globales de tu Diseño */
+:root {
+  --primary-start: #667eea;
+  --primary-end: #764ba2;
+  --success-start: #28a745;
+  --success-end: #20c997;
+  --light-text: #ffffff;
+  --dark-text: #333;
+  --bg-light: #ffffff;
+  --bg-panel: rgba(255, 255, 255, 0.95);
+  --border-light: #f0f0f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+}
+
+/* 2. Reseteo Global y Suavizado de Fuentes */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Un reset fundamental */
+}
+
+body {
+  margin: 0; /* Elimina el margen por defecto */
+  font-family: var(--main-font); /* Aplica tu fuente principal globalmente */
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Propiedades para mejorar el renderizado del texto */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
