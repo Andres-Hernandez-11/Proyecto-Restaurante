@@ -48,13 +48,14 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 
     *(Si genera un error al no encontrar la variable 'DATABASE_URL' se debe crear la variable en terminal y ejecutar después el paso 4)*
     ```bash
-    $env:DATABASE_URL="postgresql://postgres.egozlcxznvfehdejjkab:[YOUR-PASSWORD]@aws-1-us-east-2.pooler.supabase.com:5432/postgres?pgbouncer=true"
+    DATABASE_URL="postgresql://postgres.egozlcxznvfehdejjkab:[YOUR-PASSWORD]@aws-1-us-east-2.pooler.supabase.com:5432/postgres?pgbouncer=true"
     ```
 
 
 ### 4. Base de Datos
 Ejecuta la migración de Prisma para crear todas las tablas en tu base de datos:
 ```bash
+npx prisma db push
 npx prisma migrate dev --name init
  ```
 
