@@ -68,7 +68,7 @@ npm install cors
 1. Se ejecuta el servidor con el comando node server.js -> el servidor estara corriendo en el localhost en el puerto 4000
 
 
-
+---
 
 ## Cómo Empezar instalación del FRONTEND
 
@@ -88,22 +88,17 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
     ```bash
     npm install
 
-### 3. Conexion a la API de cada componente
-    ```
-1.  En el código  `TomarPedido.jsx`, se usara la URL:
-     `const API_URL = import.meta.env.VITE_API_URL;`
-    ```
-### 4. Instalar axios
+### 3. Instalar axios
 Inicia el servidor de desarrollo de Vite:
 ```bash
 npm install axios
 ```
 
-### 5. Ejecutar la Aplicación
+### 4. Ejecutar la Aplicación
 Inicia el servidor de desarrollo de Vite:
 ```bash
 npm run dev 
 ```
 
-### 6. puerto de ejecucion
+### 5. puerto de ejecucion
 1. Se ejecuta la aplicacionen el puerto 5173 o en el que indique la terminal
