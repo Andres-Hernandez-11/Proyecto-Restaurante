@@ -1,0 +1,84 @@
+// prisma/schema.prisma
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+// --- AQUI EMPIEZA NUESTRO MODELO DE DATOS ---
+
+model Usuario {
+  id            Int      @id @default(autoincrement())
+  nombre        String
+  email         String   @unique
+  password_hash String
+  rol           Rol      @default(mesero)
+  creado_at     DateTime @default(now())
+  pedidos       Pedido[]
+}
+
+model Mesa {
+  id      Int      @id @default(autoincrement())
+  numero  String   @unique
+  estado  EstadoMesa @default(libre)
+  pedidos Pedido[]
+}
+
+model Plato {
+  id             Int             @id @default(autoincrement())
+  nombre         String          @unique
+  precio         Float
+  disponible     Boolean         @default(true)
+  categoria      String? // El '?' lo hace opcional
+  actualizado_at DateTime        @updatedAt
+  detalles       DetallePedido[]
+}
+
+model Pedido {
+  id             Int             @id @default(autoincrement())
+  mesa           Mesa            @relation(fields: [id_mesa], references: [id])
+  id_mesa        Int
+  usuario        Usuario?        @relation(fields: [id_usuario], references: [id])
+  id_usuario     Int?
+  estado         EstadoPedido    @default(nuevo)
+  total          Float           @default(0)
+  creado_at      DateTime        @default(now())
+  actualizado_at DateTime        @updatedAt
+  detalles       DetallePedido[]
+}
+
+model DetallePedido {
+  id          Int      @id @default(autoincrement())
+  pedido      Pedido   @relation(fields: [id_pedido], references: [id])
+  id_pedido   Int
+  plato       Plato    @relation(fields: [id_plato], references: [id])
+  id_plato    Int
+  cantidad    Int      @default(1)
+  observacion String?
+}
+
+// --- ENUMS: Definen los valores permitidos para ciertos campos ---
+enum Rol {
+  mesero
+  cocina
+  admin
+}
+
+enum EstadoMesa {
+  libre
+  ocupada
+}
+
+enum EstadoPedido {
+  nuevo
+  preparando
+  listo
+  entregado
+  cancelado
+}
