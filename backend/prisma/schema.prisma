@@ -24,21 +24,22 @@ model Usuario {
 }
 
 model Mesa {
-  id      Int      @id @default(autoincrement())
-  numero  String   @unique
-  estado  EstadoMesa @default(libre)
-  pedidos Pedido[]
+  id        Int      @id @default(autoincrement())
+  numero    String   @unique
+  estado    EstadoMesa @default(libre)
+  pedidos   Pedido[]
+  disponible Boolean  @default(true)  // <-- AÑADE ESTA LÍNEA
 }
 
 model Plato {
   id             Int             @id @default(autoincrement())
   nombre         String          @unique
   precio         Float
-  disponible     Boolean         @default(true)
-  categoria      String? // El '?' lo hace opcional
+  disponible     Boolean         @default(true)  // <-- AÑADE ESTA LÍNEA
+  categoria      String?
   actualizado_at DateTime        @updatedAt
   detalles       DetallePedido[]
-}
+  }
 
 model Pedido {
   id             Int             @id @default(autoincrement())

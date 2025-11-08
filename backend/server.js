@@ -1,47 +1,45 @@
 // server.js
 
-
-
-// 1. IMPORTACIONES
+// ... (importaciones y configuraciones iniciales - express, cors, prisma) ...
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
 
-// 2. INICIALIZACIONES
 const app = express();
 const prisma = new PrismaClient();
 
-// 3. MIDDLEWARE
-app.use(cors()); // 
+app.use(cors());
 app.use(express.json());
-
-
-
-// 4. ENDPOINTS DE LA API
 
 /*
 ===============================================
-ENDPOINTS PARA PLATOS
+ ENDPOINTS PARA PLATOS (con Borrado Suave)
 ===============================================
 */
 
-/**
- * Endpoint para OBTENER todos los platos (READ)
- * Ruta: GET /api/platos
- */
+// GET /api/platos (Para el Mesero - Solo disponibles)
 app.get('/api/platos', async (req, res) => {
   try {
-    const platos = await prisma.plato.findMany();
+    const platos = await prisma.plato.findMany({
+      where: { disponible: true }, // <-- ¡LA MAGIA!
+    });
     res.json(platos);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los platos.' });
   }
 });
 
-/**
- * Endpoint para CREAR un nuevo plato (CREATE)
- * Ruta: POST /api/platos
- */
+// GET /api/admin/platos (Para el Admin - Todos)
+app.get('/api/admin/platos', async (req, res) => {
+  try {
+    const platos = await prisma.plato.findMany(); // <-- Trae todos
+    res.json(platos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los platos para admin.' });
+  }
+});
+
+// POST (Crear) - Sin cambios
 app.post('/api/platos', async (req, res) => {
   try {
     const nuevoPlato = await prisma.plato.create({
@@ -53,33 +51,69 @@ app.post('/api/platos', async (req, res) => {
   }
 });
 
+// PUT (Actualizar / Desactivar / Reactivar)
+app.put('/api/platos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const platoActualizado = await prisma.plato.update({
+      where: { id: parseInt(id) },
+      data: req.body, // Aquí vendrá { disponible: false }
+    });
+    res.json(platoActualizado);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el plato.' });
+  }
+});
+
+// DELETE (Ya no lo usaremos, pero lo dejamos por si acaso)
+app.delete('/api/platos/:id', async (req, res) => {
+  // ... (código existente)
+  try {
+    const { id } = req.params;
+    await prisma.plato.delete({
+      where: { id: parseInt(id) },
+    });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: 'Error al borrar el plato.' });
+  }
+});
+
+
 /*
 ===============================================
- ENDPOINTS PARA MESAS
+ ENDPOINTS PARA MESAS (con Borrado Suave)
 ===============================================
 */
 
-/**
- * Endpoint para OBTENER todas las mesas
- * Ruta: GET /api/mesas
- */
+// GET /api/mesas (Para el Mesero - Solo disponibles)
 app.get('/api/mesas', async (req, res) => {
   try {
-    const mesas = await prisma.mesa.findMany();
+    const mesas = await prisma.mesa.findMany({
+      where: { disponible: true }, // <-- ¡LA MAGIA!
+    });
     res.json(mesas);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener las mesas.' });
   }
 });
 
-/**
- * Endpoint para CREAR una nueva mesa
- * Ruta: POST /api/mesas
- */
+// GET /api/admin/mesas (Para el Admin - Todas)
+app.get('/api/admin/mesas', async (req, res) => {
+  try {
+    const mesas = await prisma.mesa.findMany(); // <-- Trae todas
+    res.json(mesas);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las mesas para admin.' });
+  }
+});
+
+// POST (Crear) - Sin cambios
 app.post('/api/mesas', async (req, res) => {
+  // ... (código existente)
   try {
     const nuevaMesa = await prisma.mesa.create({
-      data: req.body, // Espera un JSON como { "numero": "Mesa 5" }
+      data: req.body,
     });
     res.status(201).json(nuevaMesa);
   } catch (error) {
@@ -87,25 +121,48 @@ app.post('/api/mesas', async (req, res) => {
   }
 });
 
+// PUT (Actualizar / Desactivar / Reactivar)
+app.put('/api/mesas/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const mesaActualizada = await prisma.mesa.update({
+      where: { id: parseInt(id) },
+      data: req.body, // Aquí vendrá { disponible: false } o { estado: "ocupada" }
+    });
+    res.json(mesaActualizada);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar la mesa.' });
+  }
+});
+
+// DELETE (Ya no lo usaremos)
+app.delete('/api/mesas/:id', async (req, res) => {
+  // ... (código existente)
+  try {
+    const { id } = req.params;
+    await prisma.mesa.delete({
+      where: { id: parseInt(id) },
+    });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: 'Error al borrar la mesa.' });
+  }
+});
 
 /*
 ===============================================
- ENDPOINTS PARA PEDIDOS
+ ENDPOINTS PARA PEDIDOS (Sin cambios)
 ===============================================
 */
-
-/**
- * Endpoint para OBTENER todos los pedidos con sus detalles
- * Ruta: GET /api/pedidos
- */
+// ... (copia y pega tus endpoints GET y POST de pedidos existentes aquí) ...
 app.get('/api/pedidos', async (req, res) => {
   try {
     const pedidos = await prisma.pedido.findMany({
       include: {
-        mesa: true,     // Incluye la información de la mesa asociada
-        detalles: {     // Incluye los detalles del pedido
+        mesa: true,
+        detalles: {
           include: {
-            plato: true // Y dentro de cada detalle, incluye la info del plato
+            plato: true
           }
         }
       }
@@ -116,19 +173,14 @@ app.get('/api/pedidos', async (req, res) => {
   }
 });
 
-/**
- * Endpoint para CREAR un nuevo pedido
- * Ruta: POST /api/pedidos
- */
 app.post('/api/pedidos', async (req, res) => {
   try {
     const datosPedido = req.body;
     
-    // Prisma crea el pedido y sus detalles en una sola transacción
     const nuevoPedido = await prisma.pedido.create({
       data: {
         id_mesa: datosPedido.id_mesa,
-        id_usuario: datosPedido.id_usuario, // Puede ser null si aún no hay login
+        id_usuario: datosPedido.id_usuario,
         detalles: {
           create: datosPedido.detalles.map(detalle => ({
             id_plato: detalle.id_plato,
@@ -138,17 +190,13 @@ app.post('/api/pedidos', async (req, res) => {
         },
       },
       include: {
-        detalles: true, // Devuelve el pedido creado junto con sus detalles
+        detalles: true,
       },
     });
 
-    // ¡Aquí es donde ocurrirá la magia en el futuro!
-    // TODO: Emitir evento por Socket.IO para notificar a la cocina
-    // io.emit('order:new', nuevoPedido);
-
     res.status(201).json(nuevoPedido);
   } catch (error) {
-    console.error(error); // Muestra el error detallado en la consola
+    console.error(error);
     res.status(500).json({ error: 'Error al crear el pedido.' });
   }
 });
