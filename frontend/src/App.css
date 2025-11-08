@@ -2,16 +2,24 @@
 
 /* 1. Variables Globales para un diseño consistente */
 :root {
-  --primary-start: #66eaa8;
-  --primary-end: #764ba2;
-  --success-start: #28a745;
-  --success-end: #20c997;
-  --light-text: #ffffff;
-  --dark-text: #333;
-  --bg-light: #ffffff;
-  --bg-panel: rgba(255, 255, 255, 0.95);
-  --border-light: #f0f0f0;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  /* 🎨 Paleta Jungle Soft */
+  --primary-start: #2E8B57; /* Verde jungla principal */
+  --primary-end: #47A870;   /* Verde más claro para degradados */
+  --success-start: #9BE589; /* Verde lima suave */
+  --success-end: #47A870;   /* Verde secundario */
+  --accent-warm: #E1B941;   /* Dorado cálido */
+  --warning: #E67E22;      /* Naranja terroso */
+  --danger: #C0392B;        /* Rojo tierra oscuro */
+
+  /* 🌑 Fondos y texto */
+  --light-text: #F4F4F4; /* Blanco suave */
+  --dark-text: #C0C8C2;   /* Gris verdoso */
+  --bg-light: #0B1F15;   /* Fondo principal oscuro tipo jungla */
+  --bg-panel: #123D27;   /* Fondo para tarjetas o paneles */
+  --border-light: rgba(255, 255, 255, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+
+  /* 🖋 Tipografía y bordes */
   --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --border-radius-md: 8px;
   --border-radius-lg: 16px;
@@ -20,25 +28,59 @@
 /* 2. Estilos base y centrado principal */
 body {
   font-family: var(--main-font);
-  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-  color: var(--dark-text);
+  background: linear-gradient(135deg, var(--bg-light) 0%, #102C1D 100%);
+  color: var(--light-text);
   margin: 0;
   padding: 20px;
   min-height: 100vh;
-  /* Centrado perfecto de todo el contenido */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
 }
 
 .App {
   width: 100%;
   max-width: 1200px;
-  text-align: center; /* Centra el texto de los elementos hijos por defecto */
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* 3. Estilos del formulario de selección */
+/* 3. Estilos de Navegación */
+.main-nav {
+  background-color: var(--bg-panel);
+  padding: 10px 20px;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.main-nav button {
+  background: transparent;
+  color: var(--dark-text); /* Color sutil para botones inactivos */
+  border: 2px solid transparent;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.main-nav button:hover {
+  color: var(--light-text);
+  background-color: rgba(71, 168, 112, 0.15); /* Resaltado suave */
+}
+
+.main-nav button.active {
+  background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+  color: var(--light-text);
+  border-color: var(--primary-end);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* 4. Estilos del formulario de selección */
 .form-group {
   margin-bottom: 40px;
 }
@@ -48,7 +90,7 @@ label {
   margin-bottom: 12px;
   font-weight: 600;
   font-size: 1.2rem;
-  color: var(--light-text);
+  color: var(--accent-warm);
   text-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 
@@ -58,7 +100,8 @@ select {
   padding: 12px 18px;
   border-radius: var(--border-radius-md);
   border: 2px solid transparent;
-  background-color: var(--bg-light);
+  background-color: var(--bg-panel);
+  color: var(--light-text);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -67,20 +110,20 @@ select {
 
 select:focus {
   outline: none;
-  border-color: var(--primary-start);
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
+  border-color: var(--primary-end);
+  box-shadow: 0 0 0 4px rgba(71, 168, 112, 0.3);
 }
 
-/* 4. Contenedor principal de las tarjetas */
+/* 5. Contenedor principal de las tarjetas */
 .container {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start; /* Alinea las tarjetas en la parte superior */
+  align-items: flex-start;
 }
 
-/* 5. Estilos de las tarjetas (Menú y Pedido) */
+/* 6. Estilos de las tarjetas (Menú y Pedido) */
 .menu-disponible, .pedido-actual {
   flex: 1;
   min-width: 320px;
@@ -88,25 +131,25 @@ select:focus {
   background: var(--bg-panel);
   padding: 30px;
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-align: left; /* Alinea el texto de la tarjeta a la izquierda */
+  text-align: left;
 }
 
 .menu-disponible:hover, .pedido-actual:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
 }
 
 .menu-disponible h2, .pedido-actual h2 {
   margin-top: 0;
-  color: var(--primary-start);
+  color: var(--primary-end);
   text-align: center;
   font-size: 1.5rem;
   margin-bottom: 25px;
 }
 
-/* 6. Estilos de los ítems del menú */
+/* 7. Estilos de los ítems del menú */
 .plato-item {
   display: flex;
   justify-content: space-between;
@@ -117,7 +160,7 @@ select:focus {
 }
 
 .plato-item:hover {
-  background-color: #f8f9ff;
+  background-color: rgba(71, 168, 112, 0.15);
   border-radius: var(--border-radius-md);
 }
 
@@ -127,7 +170,7 @@ select:focus {
 
 .plato-item span {
   font-size: 1rem;
-  color: var(--dark-text);
+  color: var(--light-text);
 }
 
 .plato-item button {
@@ -140,22 +183,19 @@ select:focus {
   font-size: 1.4rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* Para centrar el '+' perfectamente */
+  line-height: 1;
 }
 
 .plato-item button:hover {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transform: scale(1.05);
 }
 
-.plato-item button:active {
-  transform: scale(1.05) ;
-}
-
-/* 7. Estilos de la lista del pedido */
+/* 8. Estilos de la lista del pedido */
 .pedido-actual ul {
   list-style: none;
   padding: 0;
@@ -166,31 +206,32 @@ select:focus {
   display: flex;
   justify-content: space-between;
   padding: 12px 15px;
-  background-color: #f8f9ff;
+  background-color: rgba(255,255,255,0.05);
   margin-bottom: 8px;
   border-radius: var(--border-radius-md);
   font-size: 1rem;
+  color: var(--light-text);
 }
 
 .pedido-actual button {
   width: 100%;
   padding: 15px;
   background: linear-gradient(135deg, var(--success-start) 0%, var(--success-end) 100%);
-  color: var(--light-text);
+  color: var(--bg-light);
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 8px rgba(71, 168, 112, 0.4);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .pedido-actual button:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+  box-shadow: 0 6px 12px rgba(155, 229, 137, 0.4);
 }
 
 .pedido-actual button:active:not(:disabled) {
@@ -198,24 +239,237 @@ select:focus {
 }
 
 .pedido-actual button:disabled {
-  background: #ccc;
+  background: #555;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* 8. Estilos responsivos */
+/* 9. Estilos responsivos */
 @media (max-width: 768px) {
-  body {
-    align-items: flex-start; /* Permite scroll en pantallas pequeñas */
-  }
-
   .container {
     flex-direction: column;
-    align-items: center; /* Centra las tarjetas en el modo columna */
+    align-items: center;
   }
-  
+
   .menu-disponible, .pedido-actual {
     width: 100%;
-    max-width: 90vw; /* Asegura que no toque los bordes */
+    max-width: 90vw;
   }
+}
+
+/* 🌿 Estilos para la sección de administración de platos */
+
+.admin-section {
+  background: var(--bg-panel);
+  padding: 40px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 6px 16px var(--shadow-color);
+  max-width: 800px;
+  margin: 30px auto;
+  color: var(--light-text);
+}
+
+.admin-section h2 {
+  text-align: center;
+  color: var(--accent-warm);
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.admin-section h3 {
+  color: var(--primary-end);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 📋 Formulario de creación */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.admin-form input {
+  padding: 12px 16px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-light);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--light-text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.admin-form input::placeholder {
+  color: #9fa7a1;
+}
+
+.admin-form input:focus {
+  outline: none;
+  border-color: var(--primary-end);
+  background-color: rgba(71, 168, 112, 0.1);
+  box-shadow: 0 0 0 3px rgba(71, 168, 112, 0.3);
+}
+
+.admin-form button {
+  background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+  color: var(--light-text);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.admin-form button:hover {
+  background: linear-gradient(135deg, var(--primary-end), var(--success-end));
+  transform: translateY(-2px);
+}
+
+/* 🧾 Lista de platos existentes */
+.admin-list {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color 0.2s ease;
+}
+
+.admin-list li:hover {
+  background-color: rgba(71, 168, 112, 0.1);
+  border-radius: var(--border-radius-md);
+}
+
+.admin-list li span {
+  font-weight: 500;
+  color: var(--light-text);
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.admin-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn-edit {
+  background: var(--accent-warm); /* Dorado */
+  color: var(--bg-light);
+}
+
+.btn-delete {
+  background: var(--danger); /* Rojo */
+  color: var(--light-text);
+}
+
+
+/* --- Navegación interna del Admin --- */
+.admin-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.admin-nav button {
+  background: var(--bg-light);
+  color: var(--dark-text);
+  border: 1px solid var(--primary-end);
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.admin-nav button:hover {
+  color: var(--light-text);
+  background-color: rgba(71, 168, 112, 0.15);
+}
+
+.admin-nav button.active {
+  background: var(--primary-end);
+  color: var(--bg-light);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* --- Botones de Cancelar y Toggle --- */
+.btn-cancel {
+  background: var(--warning); /* Naranja terroso */
+  color: var(--bg-light);
+}
+
+.btn-toggle {
+  background: var(--primary-end);
+  color: var(--bg-light);
+  font-size: 0.8rem; /* Más pequeño */
+  padding: 8px;
+}
+
+/* --- Estilos para el estado de la mesa --- */
+.estado.libre {
+  color: var(--success-start);
+  font-weight: bold;
+}
+
+.estado.ocupada {
+  color: var(--warning);
+  font-weight: bold;
+}
+
+/* Estilo para el botón de Reactivar */
+.btn-reactivar {
+  background: var(--success-end); /* Verde secundario */
+  color: var(--light-text);
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn-reactivar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Estilo para los items desactivados en la lista */
+.item-desactivado {
+  opacity: 0.5;
+  background-color: rgba(80, 80, 80, 0.1);
+  text-decoration: line-through;
+}
+
+.item-desactivado:hover {
+  opacity: 1;
+  background-color: rgba(71, 168, 112, 0.1);
+}
+
+.item-desactivado strong {
+  color: var(--danger);
 }
