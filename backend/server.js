@@ -201,16 +201,18 @@ app.post('/api/pedidos', async (req, res) => {
   }
 });
 
-// GET /api/pedidos/en-curso - Pedidos en estado "nuevo" o "en_preparacion"
-app.get('/api/pedidos/en-curso', async (req, res) => {
-  try {
-    const pedidos = await prisma.pedido.findMany({
-      where: {
-        estado: {
-          in: ['nuevo', 'en_preparacion'],
-        },
-      },
-      include: {
+      // ...
+      // GET /api/pedidos/en-curso - Pedidos en estado "nuevo" o "preparando"
+      app.get('/api/pedidos/en-curso', async (req, res) => {
+        try {
+          const pedidos = await prisma.pedido.findMany({
+            where: {
+              estado: {
+                in: ['nuevo', 'preparando'], // <-- CORREGIDO
+              },
+            },
+      // ...
+      include: {  
         mesa: true,
         detalles: {
           include: { plato: true },
@@ -225,6 +227,34 @@ app.get('/api/pedidos/en-curso', async (req, res) => {
   }
 });
 
+
+
+// PUT /api/pedidos/:id/estado - Actualiza el estado de un pedido
+app.put('/api/pedidos/:id/estado', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { estado } = req.body; // Recibirá { "estado": "preparando" }
+
+    // Validar que el estado sea uno de los valores permitidos por el Enum
+    // (Puedes añadir esta validación si lo deseas, aunque Prisma suele ayudar)
+
+    const pedidoActualizado = await prisma.pedido.update({
+      where: { id: parseInt(id) },
+      data: { 
+        estado: estado,
+        actualizado_at: new Date() // Forzar la actualización de la hora
+      },
+    });
+    res.json(pedidoActualizado);
+  } catch (error) {
+    console.error("Error al actualizar estado del pedido:", error);
+    res.status(500).json({ error: 'Error al actualizar el estado.' });
+  }
+});
+
+
+// 5. INICIAR EL SERVIDOR
+// ...
 
 
 // 5. INICIAR EL SERVIDOR

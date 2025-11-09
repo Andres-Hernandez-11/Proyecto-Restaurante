@@ -1,5 +1,4 @@
 // src/components/TomarPedido.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -65,7 +64,6 @@ function TomarPedido() {
     }
   };
 
-  // --- Agrupar platos por categoría ---
   const categorias = platos.reduce((acc, plato) => {
     const cat = plato.categoria || 'Sin categoría';
     if (!acc[cat]) acc[cat] = [];
@@ -73,13 +71,11 @@ function TomarPedido() {
     return acc;
   }, {});
 
-  // --- Filtro de búsqueda ---
   const platosFiltradosPorBusqueda = (lista) =>
     lista.filter((plato) =>
       plato.nombre.toLowerCase().includes(busqueda.toLowerCase())
     );
 
-  // --- Toggle de categorías ---
   const toggleCategoria = (categoria) => {
     setCategoriasAbiertas(prev => ({
       ...prev,
@@ -88,86 +84,90 @@ function TomarPedido() {
   };
 
   return (
-    <div className="tomar-pedido-container">
-      <h1>Tomar Nuevo Pedido</h1>
+    <div className="admin-panel">
+      {/* 💡 Recuadro semitransparente que envuelve todo */}
+      <div className="pedido-panel">
+        <h1>Tomar Nuevo Pedido</h1>
 
-      {/* Selector de Mesa */}
-      <div className="form-group admin-panel">
-        <label>Seleccionar Mesa:</label>
-        <select
-          value={mesaSeleccionada}
-          onChange={(e) => setMesaSeleccionada(e.target.value)}
-        >
-          <option value="">-- Elige una mesa --</option>
-          {mesas
-            .filter((mesa) => mesa.estado?.toLowerCase() === "libre")
-            .map((mesa) => (
-              <option key={mesa.id} value={mesa.id}>
-                Mesa {mesa.numero}
-              </option>
-            ))}
-        </select>
-      </div>
+        {/* Selector de Mesa */}
+        <div>
+          <label>Seleccionar Mesa:</label>
+          <select
+            value={mesaSeleccionada}
+            onChange={(e) => setMesaSeleccionada(e.target.value)}
+          >
+            <option value="">-- Elige una mesa --</option>
+            {mesas
+              .filter((mesa) => mesa.estado?.toLowerCase() === "libre")
+              .map((mesa) => (
+                <option key={mesa.id} value={mesa.id}>
+                  Mesa {mesa.numero}
+                </option>
+              ))}
+          </select>
+        </div>
 
-      {/* 🔍 Buscador */}
-      <div className="buscador">
-        <input
-          type="text"
-          placeholder="Buscar plato por nombre..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-        />
-      </div>
+        {/* 🔍 Buscador */}
+        <div className="buscador">
+          <input
+            type="text"
+            placeholder="Buscar plato por nombre..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
 
-      {/* Menú agrupado por categorías */}
-      <div className="menu-categorias">
-        {Object.keys(categorias).map((categoria) => {
-          const lista = platosFiltradosPorBusqueda(categorias[categoria]);
-          if (lista.length === 0) return null; // no mostrar si no hay coincidencias
+        {/* Menú agrupado por categorías */}
+        <div className="menu-categorias">
+          {Object.keys(categorias).map((categoria) => {
+            const lista = platosFiltradosPorBusqueda(categorias[categoria]);
+            if (lista.length === 0) return null;
 
-          return (
-            <div key={categoria} className="categoria-bloque">
-              <h3
-                className="categoria-titulo"
-                onClick={() => toggleCategoria(categoria)}
-              >
-                {categoria} {categoriasAbiertas[categoria] ? '▲' : '▼'}
-              </h3>
-              {categoriasAbiertas[categoria] && (
-                <div className="categoria-contenido">
-                  {lista.map((plato) => (
-                    <div key={plato.id} className="plato-item">
-                      <span>{plato.nombre} - ${plato.precio}</span>
-                      <button onClick={() => handleAgregarPlato(plato)}>+</button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <div key={categoria} className="categoria-bloque">
+                <h3
+                  className="categoria-titulo"
+                  onClick={() => toggleCategoria(categoria)}
+                >
+                  {categoria} {categoriasAbiertas[categoria] ? '▲' : '▼'}
+                </h3>
+                {categoriasAbiertas[categoria] && (
+                  <div className="categoria-contenido">
+                    {lista.map((plato) => (
+                      <div key={plato.id} className="plato-item">
+                        <span>{plato.nombre} - ${plato.precio}</span>
+                        <button onClick={() => handleAgregarPlato(plato)}>+</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
 
-      {/* Pedido actual */}
-      <div className="pedido-actual">
-        <h2>Pedido Actual</h2>
-        {pedidoActual.length === 0 ? (
-          <p>Añade platos desde el menú.</p>
-        ) : (
-          <ul>
-            {pedidoActual.map(item => (
-              <li key={item.id_plato}>
-                {item.nombre} x {item.cantidad}
-              </li>
-            ))}
-          </ul>
-        )}
-        <button
-          onClick={handleEnviarPedido}
-          disabled={!mesaSeleccionada || pedidoActual.length === 0}
-        >
-          Enviar Pedido a Cocina
-        </button>
+        {/* Pedido actual */}
+<div className="pedido-actual">
+  <h2>Pedido Actual</h2>
+  {pedidoActual.length === 0 ? (
+    <p>Añade platos desde el menú.</p>
+  ) : (
+    <ul>
+      {pedidoActual.map(item => (
+        <li key={item.id_plato}>
+          {item.nombre} x {item.cantidad}
+        </li>
+      ))}
+    </ul>
+  )}
+  <button
+    onClick={handleEnviarPedido}
+    disabled={!mesaSeleccionada || pedidoActual.length === 0}
+  >
+    Enviar Pedido a Cocina
+  </button>
+</div>
+
       </div>
     </div>
   );

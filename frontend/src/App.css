@@ -653,11 +653,143 @@ select:focus {
 .plato-item button:hover {
   background: #000000;
 }
-
+  
 .pedido-actual {
-  margin-top: 30px;
-  padding: 15px;
-  background: #165234;
-  border-radius: 8px;
+  background: #165234cc; /* tono verde semitransparente */
+  border-radius: 10px;
+  padding: 20px;
+  width: 60%;
+  margin: 40px auto; /* centra horizontalmente */
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.pedido-actual h2 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.pedido-actual p, 
+.pedido-actual li {
+  color: #fff;
+  font-size: 16px;
+}
+
+.pedido-actual ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.pedido-actual button {
+  background: #00b894;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pedido-actual button:hover {
+  background: #019170;
+}
+
+
+
+/* ... (al final de tu App.css) ... */
+
+/* Estilos para las tarjetas de Pedidos en Curso */
+.pedidos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.pedido-card {
+  background: var(--bg-light); /* Fondo más oscuro */
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  border: 1px solid var(--border-light);
+}
+
+.pedido-card h3 {
+  color: var(--accent-warm);
+  margin-top: 0;
+  text-align: left;
+}
+
+.pedido-card p {
+  text-align: left;
+}
+
+.pedido-card ul {
+  list-style: none;
+  padding-left: 0;
+  text-align: left;
+}
+
+.pedido-card li {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.estado-pedido {
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+.estado-pedido.nuevo {
+  background-color: var(--warning);
+  color: var(--bg-light);
+}
+.estado-pedido.preparando {
+  background-color: var(--primary-end);
+  color: var(--light-text);
+}
+
+.pedido-acciones {
+  margin-top: 15px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 15px;
+  display: flex;
+  flex-wrap: wrap; /* Para que se ajusten en móviles */
+}
+
+/* Clases para los nuevos botones */
+.btn-preparar {
+  background: var(--accent-warm); /* Dorado */
+  color: var(--bg-light);
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-listo {
+  background: var(--success-start); /* Verde lima */
+  color: var(--bg-light);
+    padding: 8px 12px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-preparar:hover {
+  transform: translateY(-2px);
+}
+.btn-listo:hover {
+  transform: translateY(-2px);
+}
+
+
 
