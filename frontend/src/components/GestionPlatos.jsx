@@ -13,13 +13,19 @@ function GestionPlatos() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  // Filtros
+  const [filtroCategoria, setFiltroCategoria] = useState('');
+  const [filtroNombre, setFiltroNombre] = useState('');
+  const [ordenPrecio, setOrdenPrecio] = useState('');
+
+  const categoriasDisponibles = ['Bebidas', 'Entradas', 'Platos fuertes', 'Postres'];
+
   useEffect(() => {
     cargarPlatos();
   }, []);
 
   const cargarPlatos = async () => {
     try {
-      // ¡Cambiamos al nuevo endpoint de admin!
       const res = await axios.get(`${API_URL}/admin/platos`);
       setPlatos(res.data);
     } catch (error) {
@@ -71,16 +77,15 @@ function GestionPlatos() {
     setCategoria(plato.categoria || '');
   };
 
-  // --- ¡NUEVA FUNCIÓN DE BORRADO SUAVE! ---
   const handleToggleDisponibilidad = async (plato) => {
-    const nuevoEstado = !plato.disponible; // Invierte el estado actual
+    const nuevoEstado = !plato.disponible; 
     const accion = nuevoEstado ? 'reactivar' : 'desactivar';
 
     if (window.confirm(`¿Estás seguro de que quieres ${accion} este plato?`)) {
       try {
         await axios.put(`${API_URL}/platos/${plato.id}`, { disponible: nuevoEstado });
         alert(`Plato ${accion}do con éxito`);
-        cargarPlatos(); // Recargamos la lista
+        cargarPlatos();
       } catch (error) {
         console.error(`Error al ${accion} el plato:`, error);
         alert(`Hubo un error al ${accion} el plato.`);
@@ -88,12 +93,24 @@ function GestionPlatos() {
     }
   };
 
+  // --- Aplicar filtros y orden ---
+  const platosFiltrados = platos
+    .filter(p => 
+      (!filtroCategoria || p.categoria === filtroCategoria) &&
+      (!filtroNombre || p.nombre.toLowerCase().includes(filtroNombre.toLowerCase()))
+    )
+    .sort((a, b) => {
+      if (ordenPrecio === 'asc') return a.precio - b.precio;
+      if (ordenPrecio === 'desc') return b.precio - a.precio;
+      return 0;
+    });
+
   return (
     <div className="admin-section">
       <h2>Gestión de Platos</h2>
 
+      {/* Formulario de creación/edición */}
       <form onSubmit={handleSubmit} className="admin-form">
-        {/* ... (el formulario no cambia) ... */}
         <h3>{isEditing ? 'Editar Plato' : 'Crear Nuevo Plato'}</h3>
         <input 
           type="text" 
@@ -108,28 +125,62 @@ function GestionPlatos() {
           placeholder="Precio" 
           step="0.01"
         />
-        <input 
-          type="text" 
-          value={categoria} 
-          onChange={(e) => setCategoria(e.target.value)} 
-          placeholder="Categoría (ej: Bebidas)" 
-        />
+        <label>
+          Categoría:
+          <select 
+            value={categoria} 
+            onChange={(e) => setCategoria(e.target.value)}
+          >
+            <option value="">Seleccionar categoría</option>
+            {categoriasDisponibles.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </label>
         <button type="submit">{isEditing ? 'Actualizar Plato' : 'Crear Plato'}</button>
         {isEditing && <button type="button" onClick={resetForm} className="btn-cancel">Cancelar</button>}
       </form>
 
+      {/* FILTROS */}
+      <div className="filtros-container">
+        <h3 className="titulo-filtro">Filtrar Platos</h3>
+
+        <div className="filtro-nombre">
+          <input 
+            type="text" 
+            placeholder="Buscar por nombre..." 
+            value={filtroNombre}
+            onChange={(e) => setFiltroNombre(e.target.value)}
+          />
+        </div>
+
+        <div className="filtros-dobles">
+          <select value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
+            <option value="">Todas las categorías</option>
+            {categoriasDisponibles.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+
+          <select value={ordenPrecio} onChange={(e) => setOrdenPrecio(e.target.value)}>
+            <option value="">Ordenar por precio</option>
+            <option value="asc">Menor a mayor</option>
+            <option value="desc">Mayor a menor</option>
+          </select>
+        </div>
+      </div>
+
+      {/* LISTA */}
       <h3>Lista de Platos</h3>
       <ul className="admin-list">
-        {platos.map(plato => (
-          // Añadimos una clase si el plato está desactivado
+        {platosFiltrados.map(plato => (
           <li key={plato.id} className={!plato.disponible ? 'item-desactivado' : ''}>
             <span>
-              {plato.nombre} - ${plato.precio} 
+              {plato.nombre} - ${plato.precio} ({plato.categoria})
               {!plato.disponible && <strong> (Desactivado)</strong>}
             </span>
             <div className="admin-buttons">
               <button onClick={() => handleEdit(plato)} className="btn-edit">Editar</button>
-              {/* Cambiamos el botón de Borrar por uno de Activar/Desactivar */}
               <button 
                 onClick={() => handleToggleDisponibilidad(plato)} 
                 className={plato.disponible ? 'btn-delete' : 'btn-reactivar'}

@@ -12,7 +12,7 @@
   --danger: #C0392B;        /* Rojo tierra oscuro */
 
   /* 🌑 Fondos y texto */
-  --light-text: #F4F4F4; /* Blanco suave */
+  --light-text: #ffffff; /* Blanco suave */
   --dark-text: #C0C8C2;   /* Gris verdoso */
   --bg-light: #0B1F15;   /* Fondo principal oscuro tipo jungla */
   --bg-panel: #123D27;   /* Fondo para tarjetas o paneles */
@@ -28,7 +28,7 @@
 /* 2. Estilos base y centrado principal */
 body {
   font-family: var(--main-font);
-  background: linear-gradient(135deg, var(--bg-light) 0%, #102C1D 100%);
+   background: url('../images/Jungla_Cascada.png') no-repeat center center fixed;
   color: var(--light-text);
   margin: 0;
   padding: 20px;
@@ -473,3 +473,191 @@ select:focus {
 .item-desactivado strong {
   color: var(--danger);
 }
+
+
+
+/* Recuadro principal */
+.admin-panel {
+  background-color: rgba(18, 61, 39, 0.65);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  margin: 2rem auto;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  max-width: 900px;
+  text-align: center;
+  border: 1px solid var(--border-light);
+}
+
+/* Título */
+.admin-title {
+  color: var(--accent-warm);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* Descripción */
+.admin-description {
+  color: var(--dark-text);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Navegación */
+.admin-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Botones */
+.admin-btn {
+  background-color: transparent;
+  border: 2px solid var(--accent-warm);
+  color: var(--accent-warm);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.admin-btn:hover {
+  background-color: var(--accent-warm);
+  color: var(--bg-light);
+  transform: translateY(-2px);
+}
+
+.admin-btn.active {
+  background-color: var(--accent-warm);
+  color: var(--bg-light);
+  box-shadow: 0 0 10px rgba(225, 185, 65, 0.5);
+}
+
+/* Contenido */
+.admin-content {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+
+
+.titulo-filtro {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.filtros-container {
+  margin: 20px auto;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filtro-nombre input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.filtros-dobles {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.filtros-dobles select {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+
+
+
+
+
+.tomar-pedido-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.buscador {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.buscador input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.menu-categorias {
+  margin-top: 20px;
+}
+
+.categoria-bloque {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.categoria-titulo {
+  background: #165234;
+  padding: 10px 15px;
+  margin: 0;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoria-contenido {
+  padding: 10px 15px;
+}
+
+.plato-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.plato-item button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.plato-item button:hover {
+  background: #000000;
+}
+
+.pedido-actual {
+  margin-top: 30px;
+  padding: 15px;
+  background: #165234;
+  border-radius: 8px;
+}
+

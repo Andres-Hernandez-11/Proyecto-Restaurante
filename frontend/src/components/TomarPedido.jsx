@@ -6,19 +6,16 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 function TomarPedido() {
-  // Estados para guardar los datos de la API
   const [mesas, setMesas] = useState([]);
   const [platos, setPlatos] = useState([]);
-
-  // Estados para manejar el pedido actual
   const [mesaSeleccionada, setMesaSeleccionada] = useState('');
-  const [pedidoActual, setPedidoActual] = useState([]); // Este será nuestro "carrito"
+  const [pedidoActual, setPedidoActual] = useState([]);
+  const [busqueda, setBusqueda] = useState('');
+  const [categoriasAbiertas, setCategoriasAbiertas] = useState({});
 
-  // useEffect para cargar mesas y platos cuando el componente se monte
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        // Hacemos las dos peticiones a la vez para más eficiencia
         const [resMesas, resPlatos] = await Promise.all([
           axios.get(`${API_URL}/mesas`),
           axios.get(`${API_URL}/platos`),
@@ -32,30 +29,24 @@ function TomarPedido() {
     cargarDatos();
   }, []);
 
-  // Función para añadir un plato al pedido actual
   const handleAgregarPlato = (plato) => {
-    // Buscamos si el plato ya está en el pedido
     const platoExistente = pedidoActual.find(item => item.id_plato === plato.id);
 
     if (platoExistente) {
-      // Si ya existe, solo aumentamos la cantidad
       setPedidoActual(pedidoActual.map(item => 
         item.id_plato === plato.id ? { ...item, cantidad: item.cantidad + 1 } : item
       ));
     } else {
-      // Si es nuevo, lo añadimos con cantidad 1
       setPedidoActual([...pedidoActual, { id_plato: plato.id, nombre: plato.nombre, cantidad: 1 }]);
     }
   };
 
-  // Función para enviar el pedido al backend
   const handleEnviarPedido = async () => {
     if (!mesaSeleccionada || pedidoActual.length === 0) {
       alert('Por favor, selecciona una mesa y añade al menos un plato.');
       return;
     }
 
-    // Creamos el objeto que nuestra API espera
     const nuevoPedido = {
       id_mesa: parseInt(mesaSeleccionada),
       detalles: pedidoActual.map(({ id_plato, cantidad }) => ({ id_plato, cantidad })),
@@ -63,61 +54,120 @@ function TomarPedido() {
 
     try {
       await axios.post(`${API_URL}/pedidos`, nuevoPedido);
+      await axios.put(`${API_URL}/mesas/${mesaSeleccionada}`, { estado: "ocupada" });
       alert('¡Pedido enviado a la cocina!');
-      // Limpiamos el estado para un nuevo pedido
       setMesaSeleccionada('');
       setPedidoActual([]);
+      window.location.reload();
     } catch (error) {
       console.error('Error al enviar el pedido:', error);
       alert('Hubo un error al enviar el pedido.');
     }
   };
 
+  // --- Agrupar platos por categoría ---
+  const categorias = platos.reduce((acc, plato) => {
+    const cat = plato.categoria || 'Sin categoría';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(plato);
+    return acc;
+  }, {});
+
+  // --- Filtro de búsqueda ---
+  const platosFiltradosPorBusqueda = (lista) =>
+    lista.filter((plato) =>
+      plato.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    );
+
+  // --- Toggle de categorías ---
+  const toggleCategoria = (categoria) => {
+    setCategoriasAbiertas(prev => ({
+      ...prev,
+      [categoria]: !prev[categoria]
+    }));
+  };
+
   return (
-    <div>
+    <div className="tomar-pedido-container">
       <h1>Tomar Nuevo Pedido</h1>
 
       {/* Selector de Mesa */}
-      <div className="form-group">
+      <div className="form-group admin-panel">
         <label>Seleccionar Mesa:</label>
-        <select value={mesaSeleccionada} onChange={(e) => setMesaSeleccionada(e.target.value)}>
+        <select
+          value={mesaSeleccionada}
+          onChange={(e) => setMesaSeleccionada(e.target.value)}
+        >
           <option value="">-- Elige una mesa --</option>
-          {mesas.map(mesa => (
-            <option key={mesa.id} value={mesa.id}>{mesa.numero}</option>
-          ))}
+          {mesas
+            .filter((mesa) => mesa.estado?.toLowerCase() === "libre")
+            .map((mesa) => (
+              <option key={mesa.id} value={mesa.id}>
+                Mesa {mesa.numero}
+              </option>
+            ))}
         </select>
       </div>
 
-      <div className="container">
-        {/* Lista de Platos Disponibles */}
-        <div className="menu-disponible">
-          <h2>Menú</h2>
-          {platos.map(plato => (
-            <div key={plato.id} className="plato-item">
-              <span>{plato.nombre} - ${plato.precio}</span>
-              <button onClick={() => handleAgregarPlato(plato)}>+</button>
-            </div>
-          ))}
-        </div>
+      {/* 🔍 Buscador */}
+      <div className="buscador">
+        <input
+          type="text"
+          placeholder="Buscar plato por nombre..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
 
-        {/* Resumen del Pedido Actual */}
-        <div className="pedido-actual">
-          <h2>Pedido Actual</h2>
-          {pedidoActual.length === 0 ? (
-            <p>Añade platos desde el menú.</p>
-          ) : (
-            <ul>
-              {pedidoActual.map(item => (
-                <li key={item.id_plato}>
-                  {item.nombre} x {item.cantidad}
-                </li>
-              ))}
-            </ul>
-          )}
-          <button onClick={handleEnviarPedido} disabled={!mesaSeleccionada || pedidoActual.length === 0}>
-            Enviar Pedido a Cocina
-          </button>
-        </div>
+      {/* Menú agrupado por categorías */}
+      <div className="menu-categorias">
+        {Object.keys(categorias).map((categoria) => {
+          const lista = platosFiltradosPorBusqueda(categorias[categoria]);
+          if (lista.length === 0) return null; // no mostrar si no hay coincidencias
+
+          return (
+            <div key={categoria} className="categoria-bloque">
+              <h3
+                className="categoria-titulo"
+                onClick={() => toggleCategoria(categoria)}
+              >
+                {categoria} {categoriasAbiertas[categoria] ? '▲' : '▼'}
+              </h3>
+              {categoriasAbiertas[categoria] && (
+                <div className="categoria-contenido">
+                  {lista.map((plato) => (
+                    <div key={plato.id} className="plato-item">
+                      <span>{plato.nombre} - ${plato.precio}</span>
+                      <button onClick={() => handleAgregarPlato(plato)}>+</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Pedido actual */}
+      <div className="pedido-actual">
+        <h2>Pedido Actual</h2>
+        {pedidoActual.length === 0 ? (
+          <p>Añade platos desde el menú.</p>
+        ) : (
+          <ul>
+            {pedidoActual.map(item => (
+              <li key={item.id_plato}>
+                {item.nombre} x {item.cantidad}
+              </li>
+            ))}
+          </ul>
+        )}
+        <button
+          onClick={handleEnviarPedido}
+          disabled={!mesaSeleccionada || pedidoActual.length === 0}
+        >
+          Enviar Pedido a Cocina
+        </button>
       </div>
     </div>
   );

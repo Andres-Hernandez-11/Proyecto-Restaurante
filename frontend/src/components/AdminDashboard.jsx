@@ -8,30 +8,33 @@ function AdminDashboard() {
   const [adminView, setAdminView] = useState('platos'); // 'platos' o 'mesas'
 
   return (
-    <div>
-      <h1>Panel de Administración</h1>
-      <p>Aquí puedes gestionar los datos maestros del restaurante.</p>
-      
-      {/* Navegación interna del admin */}
+    <div className="admin-panel">
+      <h1 className="admin-title">Panel de Administración</h1>
+      <p className="admin-description">
+        Aquí puedes gestionar los datos maestros del restaurante.
+      </p>
+
       <nav className="admin-nav">
-        <button 
+        <button
           onClick={() => setAdminView('platos')}
-          className={adminView === 'platos' ? 'active' : ''}
+          className={`admin-btn ${adminView === 'platos' ? 'active' : ''}`}
         >
           Gestionar Platos
         </button>
-        <button 
+        <button
           onClick={() => setAdminView('mesas')}
-          className={adminView === 'mesas' ? 'active' : ''}
+          className={`admin-btn ${adminView === 'mesas' ? 'active' : ''}`}
         >
           Gestionar Mesas
         </button>
       </nav>
 
-      {/* Contenido condicional */}
-      {adminView === 'platos' && <GestionPlatos />}
-      {adminView === 'mesas' && <GestionMesas />}
+      <div className="admin-content">
+        {adminView === 'platos' && <GestionPlatos />}
+        {adminView === 'mesas' && <GestionMesas />}
+      </div>
     </div>
+
   );
 }
 

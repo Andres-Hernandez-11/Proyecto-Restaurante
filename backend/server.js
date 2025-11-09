@@ -201,6 +201,31 @@ app.post('/api/pedidos', async (req, res) => {
   }
 });
 
+// GET /api/pedidos/en-curso - Pedidos en estado "nuevo" o "en_preparacion"
+app.get('/api/pedidos/en-curso', async (req, res) => {
+  try {
+    const pedidos = await prisma.pedido.findMany({
+      where: {
+        estado: {
+          in: ['nuevo', 'en_preparacion'],
+        },
+      },
+      include: {
+        mesa: true,
+        detalles: {
+          include: { plato: true },
+        },
+      },
+      orderBy: { creado_at: 'desc' },
+    });
+    res.json(pedidos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los pedidos en curso.' });
+  }
+});
+
+
 
 // 5. INICIAR EL SERVIDOR
 const PORT = process.env.PORT || 4000;
